@@ -34,11 +34,14 @@ print(message)
 print("##########################################################")
 message = quote(message)
 
+# numbers = []
 numbers = []
 f = open("numbers.txt", "r")
 for line in f.read().splitlines():
 	if line != "":
-		numbers.append(line)
+		phoneNumber, url = line.split(" ")
+		# numbers.append(line
+		numbers.append({"number": phoneNumber, "url": url})
 f.close()
 total_number=len(numbers)
 print("##########################################################")
@@ -50,14 +53,16 @@ delay = 30
 driver = webdriver.Chrome(ChromeDriverManager().install())
 print('Once your browser opens up sign in to web whatsapp')
 driver.get('https://web.whatsapp.com')
-input("Press ENTER after login into Whatsapp Web and your chats are visiable	.")
-for idx, number in enumerate(numbers):
-	number = number.strip()
+input("Press ENTER after login into Whatsapp Web and your chats are visible	.")
+for idx, numberObject in enumerate(numbers):
+	number = numberObject["number"].strip()
+	url = numberObject["url"].strip()
 	if number == "":
 		continue
 	print('{}/{} => Sending message to {}.'.format((idx+1), total_number, number))
 	try:
-		url = 'https://web.whatsapp.com/send?phone=' + number + '&text=' + message
+		user_message = f"{message}\n{url}"
+		url = 'https://web.whatsapp.com/send?phone=' + number + '&text=' + user_message
 		sent = False
 		for i in range(3):
 			if not sent:
